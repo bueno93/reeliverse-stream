@@ -1,6 +1,15 @@
-import { Search, Bell, User } from "lucide-react";
+import { Search, Bell, User, UserCircle, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navigation = () => {
   return (
@@ -8,22 +17,24 @@ const Navigation = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <h1 className="text-3xl font-bold bg-gradient-hero bg-clip-text text-transparent">
-              StreamFlix
-            </h1>
+            <Link to="/">
+              <h1 className="text-3xl font-bold bg-gradient-hero bg-clip-text text-transparent cursor-pointer">
+                StreamFlix
+              </h1>
+            </Link>
             <div className="hidden md:flex items-center gap-6">
-              <a href="#" className="text-foreground/80 hover:text-foreground transition-colors">
+              <Link to="/" className="text-foreground/80 hover:text-foreground transition-colors">
                 Início
-              </a>
-              <a href="#" className="text-foreground/80 hover:text-foreground transition-colors">
+              </Link>
+              <Link to="/movies" className="text-foreground/80 hover:text-foreground transition-colors">
                 Filmes
-              </a>
-              <a href="#" className="text-foreground/80 hover:text-foreground transition-colors">
+              </Link>
+              <Link to="/series" className="text-foreground/80 hover:text-foreground transition-colors">
                 Séries
-              </a>
-              <a href="#" className="text-foreground/80 hover:text-foreground transition-colors">
+              </Link>
+              <Link to="/my-list" className="text-foreground/80 hover:text-foreground transition-colors">
                 Minha Lista
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -38,9 +49,35 @@ const Navigation = () => {
             <Button variant="ghost" size="icon" className="text-foreground">
               <Bell className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="text-foreground">
-              <User className="w-5 h-5" />
-            </Button>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-foreground">
+                  <User className="w-5 h-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="cursor-pointer flex items-center gap-2">
+                    <UserCircle className="w-4 h-4" />
+                    Perfil
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="cursor-pointer flex items-center gap-2">
+                    <Settings className="w-4 h-4" />
+                    Configurações
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-destructive cursor-pointer flex items-center gap-2">
+                  <LogOut className="w-4 h-4" />
+                  Sair
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
