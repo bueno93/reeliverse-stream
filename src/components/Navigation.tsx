@@ -1,7 +1,7 @@
-import { Search, Bell, User, UserCircle, Settings, LogOut } from "lucide-react";
+import { Search, Bell, User, UserCircle, Settings, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +10,39 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
 
 const Navigation = () => {
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      checkAdminStatus();
+    }
+  }, [user]);
+
+  const checkAdminStatus = async () => {
+    if (!user) return;
+    
+    const { data } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle();
+    
+    setIsAdmin(!!data);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/auth");
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-background/95 to-background/0 backdrop-blur-sm">
       <div className="container mx-auto px-4 py-4">
@@ -46,38 +77,55 @@ const Navigation = () => {
                 className="pl-10 w-64 bg-background/50 border-border/50"
               />
             </div>
-            <Button variant="ghost" size="icon" className="text-foreground">
-              <Bell className="w-5 h-5" />
-            </Button>
             
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            {user ? (
+              <>
                 <Button variant="ghost" size="icon" className="text-foreground">
-                  <User className="w-5 h-5" />
+                  <Bell className="w-5 h-5" />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/profile" className="cursor-pointer flex items-center gap-2">
-                    <UserCircle className="w-4 h-4" />
-                    Perfil
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/profile" className="cursor-pointer flex items-center gap-2">
-                    <Settings className="w-4 h-4" />
-                    Configurações
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-destructive cursor-pointer flex items-center gap-2">
-                  <LogOut className="w-4 h-4" />
-                  Sair
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="text-foreground">
+                      <User className="w-5 h-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to="/profile" className="cursor-pointer flex items-center gap-2">
+                        <UserCircle className="w-4 h-4" />
+                        Perfil
+                      </Link>
+                    </DropdownMenuItem>
+                    {isAdmin && (
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="cursor-pointer flex items-center gap-2">
+                          <Shield className="w-4 h-4" />
+                          Admin
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem asChild>
+                      <Link to="/profile" className="cursor-pointer flex items-center gap-2">
+                        <Settings className="w-4 h-4" />
+                        Configurações
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer flex items-center gap-2">
+                      <LogOut className="w-4 h-4" />
+                      Sair
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <Button onClick={() => navigate('/auth')}>
+                Entrar
+              </Button>
+            )}
           </div>
         </div>
       </div>
