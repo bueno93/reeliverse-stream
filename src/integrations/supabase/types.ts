@@ -91,12 +91,99 @@ export type Database = {
           },
         ]
       }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string | null
+          id: string
+          payment_date: string | null
+          plan: Database["public"]["Enums"]["plan_type"]
+          status: string
+          stripe_payment_id: string | null
+          stripe_session_id: string | null
+          updated_at: string | null
+          user_id: string
+          valid_until: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          id?: string
+          payment_date?: string | null
+          plan: Database["public"]["Enums"]["plan_type"]
+          status?: string
+          stripe_payment_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string | null
+          user_id: string
+          valid_until?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          id?: string
+          payment_date?: string | null
+          plan?: Database["public"]["Enums"]["plan_type"]
+          status?: string
+          stripe_payment_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plan_pricing: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          duration_days: number
+          features: Json | null
+          id: string
+          name: string
+          plan: Database["public"]["Enums"]["plan_type"]
+          price: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          duration_days?: number
+          features?: Json | null
+          id?: string
+          name: string
+          plan: Database["public"]["Enums"]["plan_type"]
+          price: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          duration_days?: number
+          features?: Json | null
+          id?: string
+          name?: string
+          plan?: Database["public"]["Enums"]["plan_type"]
+          price?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           created_at: string | null
           full_name: string | null
           id: string
+          is_blocked: boolean | null
           plan: Database["public"]["Enums"]["plan_type"] | null
           updated_at: string | null
         }
@@ -105,6 +192,7 @@ export type Database = {
           created_at?: string | null
           full_name?: string | null
           id: string
+          is_blocked?: boolean | null
           plan?: Database["public"]["Enums"]["plan_type"] | null
           updated_at?: string | null
         }
@@ -113,6 +201,7 @@ export type Database = {
           created_at?: string | null
           full_name?: string | null
           id?: string
+          is_blocked?: boolean | null
           plan?: Database["public"]["Enums"]["plan_type"] | null
           updated_at?: string | null
         }
