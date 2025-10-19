@@ -6,8 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -113,7 +115,9 @@ const Profile = () => {
                 </div>
 
                 <div className="flex gap-4">
-                  <Button variant="outline">Alterar Plano</Button>
+                  <Button variant="outline" onClick={() => navigate('/checkout?plan=premium')}>
+                    Alterar Plano
+                  </Button>
                   <Button variant="destructive">Cancelar Assinatura</Button>
                 </div>
               </CardContent>
